@@ -1,0 +1,17 @@
+services:
+  sensorlab:
+    network_mode: host
+    build:
+      context: .
+      network: host
+    image: sensorlab:1.1.0
+    container_name: sensorlab
+    environment:
+      - DISPLAY=${DISPLAY:-0.0}
+      - XAUTHORITY=/root/.Xauthority
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - $HOME/.Xauthority:/root/.Xauthority:rw
+    devices:
+      - /dev/ttyS0:/dev/ttyS0
+
