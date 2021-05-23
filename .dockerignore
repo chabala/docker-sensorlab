@@ -1,6 +1,3 @@
 # Ignore everything
 *
 
-# Allow specific files
-!/Installer/sccresearch-sensorlab_1.1-0_i386.deb
-

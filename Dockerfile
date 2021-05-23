@@ -1,3 +1,11 @@
+# retrieving the software (deb inside a tarball inside a zip, with spaces in the names, ugh)
+FROM alpine:3.13.5 AS zipfile
+ADD http://ccgi.dcpmicro.plus.com/dcplogit/files/software/linuxSensorlab.zip .
+RUN apk add --no-cache unzip tar \
+  && unzip linuxSensorlab.zip \
+  && tar -xzf SensorLab\ 1-1-0\ for\ Linux.tgz
+
+# using minideb as a debian base image https://github.com/bitnami/minideb
 FROM bitnami/minideb:jessie
 ENV DEBIAN_FRONTEND=noninteractive \
     DEBCONF_NONINTERACTIVE_SEEN=true \
@@ -5,7 +13,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 WORKDIR /tmp
 ENTRYPOINT ["/usr/bin/sccresearch-sensorlab"]
-COPY Installer/sccresearch-sensorlab_1.1-0_i386.deb /tmp/
+COPY --from=zipfile ["SensorLab 1-1-0 for Linux/Installer/sccresearch-sensorlab_1.1-0_i386.deb", "/tmp/"]
 RUN set -x \
   && dpkg --add-architecture i386 \
   && apt-get update -qq \
